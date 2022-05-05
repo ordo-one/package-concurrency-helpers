@@ -12,13 +12,13 @@ let package = Package(
 
     targets: [
         .target(
-            name: "SwiftConcurrencyHelpers",
+            name: "ConcurrencyHelpers",
             dependencies: [
             ]
         ),
         .testTarget(
-            name: "SwiftConcurrencyHelpersTests",
-            dependencies: ["SwiftConcurrencyHelpers"]
+            name: "ConcurrencyHelpersTests",
+            dependencies: ["ConcurrencyHelpers"]
         ),
     ]
 )

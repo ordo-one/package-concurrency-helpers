@@ -1,7 +1,7 @@
-@testable import SwiftConcurrencyHelpers
+@testable import ConcurrencyHelpers
 import XCTest
 
-final class SwiftConcurrencyHelpersTests: XCTestCase {
+final class ConcurrencyHelpersTests: XCTestCase {
     override func setUp() {
         super.setUp()
     }
