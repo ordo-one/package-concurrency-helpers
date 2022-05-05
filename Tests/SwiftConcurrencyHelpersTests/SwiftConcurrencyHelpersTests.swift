@@ -1,5 +1,5 @@
-import XCTest
 @testable import SwiftConcurrencyHelpers
+import XCTest
 
 final class SwiftConcurrencyHelpersTests: XCTestCase {
     override func setUp() {
@@ -16,11 +16,8 @@ final class SwiftConcurrencyHelpersTests: XCTestCase {
         lock.lock()
         lock.unlock()
 
-        lock.withLock {
+        lock.withLock {}
 
-        }
-
-        lock.withLockVoid {
-        }
+        lock.withLockVoid {}
     }
 }

@@ -7,7 +7,7 @@ let package = Package(
     name: "swift-concurrency-helpers",
     platforms: [.macOS(.v10_15)],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
 
     targets: [
