@@ -8,7 +8,7 @@ Various concurrency related tools, including Lock and async stream additions etc
 To add to your project:
 ```
 dependencies: [
-    .package(url: "https://github.com/ordo-one/swift-concurrency-helpers")
+    .package(url: "https://github.com/ordo-one/swift-concurrency-helpers", .upToNextMajor(from: "0.0.1")),
 ]
 ```
 
