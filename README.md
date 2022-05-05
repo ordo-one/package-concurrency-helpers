@@ -3,5 +3,20 @@
 [![Swift address sanitizer Linux](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-linux.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-linux.yml) [![Swift address sanitizer macOS](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-macos.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-macos.yml) [![Swift thread sanitizer Linux](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-linux.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-linux.yml) [![Swift thread sanitizer macOS](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-macos.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-macos.yml)
 
 # swift-concurrency-helpers
-Template for creating a Swift server process including default GitHub workflows and dependencies.
+Various concurrency related tools, including Lock and async stream additions etc.
 
+To add to your project:
+```dependencies: [
+    .package(url: "https://github.com/ordo-one/swift-concurrency-helpers")
+]
+```
+
+and then add the dependency to your target, e.g.:
+
+```
+        .executableTarget(
+            name: "MyExecutableTarget",
+            dependencies: [
+              .product(name: "SwiftConcurrencyHelpers", package: "swift-concurrency-helpers")
+            ]),
+```
