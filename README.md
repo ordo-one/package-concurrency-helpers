@@ -15,9 +15,9 @@ dependencies: [
 and then add the dependency to your target, e.g.:
 
 ```
-        .executableTarget(
-            name: "MyExecutableTarget",
-            dependencies: [
-              .product(name: "SwiftConcurrencyHelpers", package: "swift-concurrency-helpers")
-            ]),
+.executableTarget(
+  name: "MyExecutableTarget",
+  dependencies: [
+  .product(name: "SwiftConcurrencyHelpers", package: "swift-concurrency-helpers")
+]),
 ```
