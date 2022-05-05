@@ -6,6 +6,12 @@ import PackageDescription
 let package = Package(
     name: "swift-concurrency-helpers",
     platforms: [.macOS(.v10_15)],
+    products: [
+        .library(
+            name: "ConcurrencyHelpers",
+            targets: ["ConcurrencyHelpers"]
+        )
+    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
