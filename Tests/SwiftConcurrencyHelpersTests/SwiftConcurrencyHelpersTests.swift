@@ -12,10 +12,15 @@ final class SwiftConcurrencyHelpersTests: XCTestCase {
 
     func testExample() throws {
         let lock = Lock()
+
         lock.lock()
         lock.unlock()
+
         lock.withLock {
 
+        }
+
+        lock.withLockVoid {
         }
     }
 }
