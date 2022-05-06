@@ -2,7 +2,7 @@
 [![Swift lint](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-lint.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-lint.yml) [![Swift outdated dependencies](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-outdated-dependencies.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-outdated-dependencies.yml)
 [![Swift address sanitizer Linux](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-linux.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-linux.yml) [![Swift address sanitizer macOS](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-macos.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-address-sanitizer-macos.yml) [![Swift thread sanitizer Linux](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-linux.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-linux.yml) [![Swift thread sanitizer macOS](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-macos.yml/badge.svg)](https://github.com/ordo-one/swift-concurrency-helpers/actions/workflows/swift-thread-sanitizer-macos.yml)
 
-# swift-concurrency-helpers
+# Concurrency helpers
 Various concurrency related tools, including Lock and async stream additions etc.
 
 To add to your project:
