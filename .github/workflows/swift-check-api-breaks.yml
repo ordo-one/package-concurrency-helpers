@@ -17,5 +17,4 @@ jobs:
     - name: Build
       run: swift build
     - name: Analyze API breakage
-      run: swift package diagnose-api-breaking-changes origin/main
-#      run: swift package diagnose-api-breaking-changes ${{ github.event.pull_request.base.sha }} --targets DataModel
+      run: swift package diagnose-api-breaking-changes origin/main --targets ${{ secrets.DIAGNOSE_API_BREAK_TARGET }} 

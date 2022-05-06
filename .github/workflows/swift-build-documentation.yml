@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-documentation:
-
+# https://github.com/actions/runner/issues/520
     runs-on: [self-hosted, ubuntu-latest]
 
     steps:
@@ -17,7 +17,7 @@ jobs:
     - run: mkdir -p ./docs
     - uses: fwcd/swift-docc-action@v1
       with:
-        target: ConcurrencyHelpers
+        target: ${{ secrets.DOCC_DOCUMENTATION_TARGET }}
         output: ./docs
         hosting-base-path: ${{ github.event.repository.name }}
         disable-indexing: 'true'
