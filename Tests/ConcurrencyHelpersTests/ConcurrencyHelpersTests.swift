@@ -16,8 +16,8 @@ final class ConcurrencyHelpersTests: XCTestCase {
         lock.lock()
         lock.unlock()
 
-        lock.withLock { let _ = 1 }
+        lock.withLock { _ = 1 }
 
-        lock.withLockVoid { let _ = 4 }
+        lock.withLockVoid { _ = 4 }
     }
 }
