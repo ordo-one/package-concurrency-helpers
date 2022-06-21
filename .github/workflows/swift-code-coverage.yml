@@ -6,14 +6,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   test-code-coverage:
-
     runs-on: [self-hosted, ubuntu-latest]
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v3
+    - name: Git URL token override
+      run: git config --global url."https://ordo-ci:${{ secrets.CI_MACHINE_PAT }}@github.com".insteadOf "https://github.com"
     - name: Run tests
       run: swift test --parallel --enable-code-coverage
 #    - name: Extract default SPM library testtarget
