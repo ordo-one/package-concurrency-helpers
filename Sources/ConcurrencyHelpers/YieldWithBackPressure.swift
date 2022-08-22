@@ -9,8 +9,7 @@
 @discardableResult
 public func yieldWithBackPressure<Message>(message: Message,
                                            to continuation: AsyncStream<Message>.Continuation) async -> Bool {
-    var enqueued = false
-    while !enqueued {
+    while true {
         let result = continuation.yield(message)
         switch result {
         case .terminated:
@@ -18,7 +17,6 @@ public func yieldWithBackPressure<Message>(message: Message,
             return false
         case .enqueued:
             // Here we can know how many slots remains in the stream
-            enqueued = true
             return true
         case .dropped:
             // Here we can know what message has beed dropped
