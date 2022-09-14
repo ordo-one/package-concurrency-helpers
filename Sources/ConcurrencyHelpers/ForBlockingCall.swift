@@ -1,7 +1,9 @@
 import Dispatch
 
-/// This function is a helper for calling blocking function from Task and properly suspend the Task while such call take place.
-/// The blocking function call happens in global dispatch queue and when it's done calls continuation to resume suspended Task.
+/// This function is a helper for calling blocking function from Task
+/// and properly suspend the Task while such call take place.
+/// The blocking function call happens in global dispatch queue
+/// and when it's done calls continuation to resume suspended Task.
 ///
 /// #### Usage example:
 ///  ```swift
