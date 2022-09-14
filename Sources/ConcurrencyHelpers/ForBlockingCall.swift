@@ -6,7 +6,7 @@ import Dispatch
 /// #### Usage example:
 ///  ```swift
 ///  Task {
-///      let result = await forBlockingCall {
+///      let result = await forBlockingFunc {
 ///          myBlockingFunction()
 ///      }
 ///      // end here only when myBlockingFunction() is done
@@ -17,7 +17,7 @@ import Dispatch
 /// - Parameter body: Function to be called in the `queue`
 ///
 /// - Returns: The function returns a value returned by `body` function
-public func forBlockingCall<T>(queue _: DispatchQueue = .global(),
+public func forBlockingFunc<T>(queue _: DispatchQueue = .global(),
                                body: @escaping () -> T) async -> T {
     await withCheckedContinuation { continuation in
         DispatchQueue.global().async {
