@@ -11,14 +11,22 @@ let package = Package(
             name: "ConcurrencyHelpers",
             targets: ["ConcurrencyHelpers"]
         ),
+        .library(
+            name: "Helpers",
+            targets: ["Helpers"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
-
     targets: [
         .target(
             name: "ConcurrencyHelpers",
+            dependencies: [
+            ]
+        ),
+        .target(
+            name: "Helpers",
             dependencies: [
             ]
         ),
