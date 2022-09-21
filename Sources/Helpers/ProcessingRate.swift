@@ -1,5 +1,4 @@
 import LatencyTimer
-import Metrics
 
 /// This class  tracks how many times per second during the specified interval the checkpoint was called
 ///
