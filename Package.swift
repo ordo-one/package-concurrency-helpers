@@ -5,7 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "package-concurrency-helpers",
-    platforms: [.macOS(.v10_15)],
+    platforms: [
+        .macOS(.v12),
+    ],
     products: [
         .library(
             name: "ConcurrencyHelpers",
@@ -18,6 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+        .package(url: "https://github.com/ordo-one/package-latency-tools", branch: "main"),
     ],
     targets: [
         .target(
@@ -28,6 +31,7 @@ let package = Package(
         .target(
             name: "Helpers",
             dependencies: [
+                .product(name: "LatencyTimer", package: "package-latency-tools"),
             ]
         ),
         .testTarget(
