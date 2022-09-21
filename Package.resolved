@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ordo-one/package-latency-tools",
       "state" : {
-        "branch" : "main",
-        "revision" : "bc451c5a3246c26e0d2feb0987427408349a8fe6"
+        "revision" : "bc451c5a3246c26e0d2feb0987427408349a8fe6",
+        "version" : "0.0.1"
       }
     },
     {
