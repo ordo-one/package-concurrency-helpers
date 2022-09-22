@@ -16,8 +16,12 @@ public class ProcessingRate {
 
     /// Current rate per second since the last checkpoint mark.
     public var ratePerSecond: Double {
-            let duration = LatencyTimer.getTimestamp() - lastCheckpointTime
-            return Double(1_000_000 / (Float(duration) * Float(checkpointCount)))
+        let duration = LatencyTimer.getTimestamp() - lastCheckpointTime
+
+        if checkpointCount == 0 {
+            return 0
+        }
+        return Double(checkpointCount) / Double(duration) * 1_000_000.0
     }
 
     /// Executes passed closure once the checkpoint interval has been reached.

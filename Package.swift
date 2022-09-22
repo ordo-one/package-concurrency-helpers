@@ -38,5 +38,9 @@ let package = Package(
             name: "ConcurrencyHelpersTests",
             dependencies: ["ConcurrencyHelpers"]
         ),
+        .testTarget(
+            name: "HelpersTests",
+            dependencies: ["Helpers"]
+        ),
     ]
 )
