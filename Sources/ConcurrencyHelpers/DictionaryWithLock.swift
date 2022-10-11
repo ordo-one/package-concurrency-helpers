@@ -1,4 +1,4 @@
-public struct MapWithLock<K: Hashable, V> {
+public struct DictionaryWithLock<K: Hashable, V> {
     var lock: ConcurrencyHelpers.Lock = .init()
     var map: [K: V] = [:]
 
