@@ -2,6 +2,10 @@ public struct DictionaryWithLock<K: Hashable, V> {
     var lock: ConcurrencyHelpers.Lock = .init()
     var map: [K: V] = [:]
 
+    public init() {
+        
+    }
+    
     public subscript(key: K) -> V? {
         get {
             lock.withLock {
