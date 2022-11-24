@@ -32,6 +32,7 @@ public class UnsafeRetained<T: Releasable> {
 }
 
 public typealias UnsafeRetainedBufferUInt8 = UnsafeRetained<UnsafeBufferPointer<UInt8>>
+public typealias UnsafeRetainedRawBuffer = UnsafeRetained<UnsafeRawBufferPointer>
 
 extension UnsafeBufferPointer: Releasable {
     public func release() {
