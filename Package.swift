@@ -40,7 +40,7 @@ let package = Package(
         ),
         .testTarget(
             name: "HelpersTests",
-            dependencies: ["Helpers"]
+            dependencies: ["Helpers", "ConcurrencyHelpers"]
         ),
     ]
 )
