@@ -13,16 +13,29 @@ jobs:
 
     strategy:
       matrix:
-        os: [[Linux, benchmark-swift-latest, self-hosted]]
+        #os: [[Linux, benchmark-swift-latest, self-hosted]]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Homebrew Mac
+        if: ${{ runner.os == 'Macos' }}
+        run: |
+          echo "/opt/homebrew/bin:/usr/local/bin" >> $GITHUB_PATH
+          brew install jemalloc
+
+      - name: Ubuntu deps
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get install -y libjemalloc-dev
+
       - name: Git URL token override and misc
         run: |
-          git config --global url."https://ordo-ci:${{ secrets.CI_MACHINE_PAT }}@github.com".insteadOf "https://github.com"
-          /usr/bin/ordo-performance
+          #git config --global url."https://ordo-ci:${{ secrets.CI_MACHINE_PAT }}@github.com".insteadOf "https://github.com"
+          #/usr/bin/ordo-performance
           [ -d Benchmarks ] && echo "hasBenchmark=1" >> $GITHUB_ENV
           echo "/opt/homebrew/bin:/usr/local/bin" >> $GITHUB_PATH
       - name: Run benchmarks for PR branch
@@ -71,5 +84,5 @@ jobs:
           comment_includes: "Pull request benchmark comparison [${{ matrix.os }}] with"
       - name: Exit with correct status
         run: |
-          /usr/bin/ordo-performance powersave
+          #/usr/bin/ordo-performance powersave
           exit ${{ env.exitStatus }}
