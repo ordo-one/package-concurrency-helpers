@@ -8,20 +8,21 @@ on:
     branches: [ main ]
 jobs:
   test-code-coverage:
-    runs-on: [swift-latest, ubuntu-latest, self-hosted]
+    runs-on: [ubuntu-22.04]
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v3
-    - name: Git URL token override
-      run: git config --global url."https://ordo-ci:${{ secrets.CI_MACHINE_PAT }}@github.com".insteadOf "https://github.com"
+
+    - name: Ubuntu deps
+      if: ${{ runner.os == 'Linux' }}
+      run: |
+        sudo apt-get install -y libjemalloc-dev llvm-14
+
     - name: Run tests
+      continue-on-error: true
       run: |
         [ -d Tests ] && swift test --parallel --enable-code-coverage
-#    - name: Extract default SPM library testtarget
-#      id: spm_test_target
-#      run: |
-#        SPM_DEFAULT_TEST_TARGET=$(swift package dump-package | jq -r '.targets | .[] | select(.type == "test") | .name' | tail -1)
-#        echo "spmlibrarytesttarget=${SPM_DEFAULT_TEST_TARGET}" >> $GITHUB_ENV
+
     - name: Export code coverage
       run: |
          xctest_binary=".build/debug/${{ github.event.repository.name }}PackageTests.xctest"
@@ -31,8 +32,9 @@ jobs:
          fi
 
          if [ -f ${xctest_binary} ]; then
-             llvm-cov export -format="lcov" ${xctest_binary} -instr-profile .build/debug/codecov/default.profdata > info.lcov
+             llvm-cov-14 export -format="lcov" ${xctest_binary} -instr-profile .build/debug/codecov/default.profdata > info.lcov
          fi
+
     - name: Upload codecov
       uses: codecov/codecov-action@v2
       with: 

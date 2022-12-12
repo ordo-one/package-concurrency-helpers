@@ -11,7 +11,7 @@ on:
 jobs:
   SwiftLint:
     timeout-minutes: 60
-    runs-on: [self-hosted, swift-docker]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v3
       - name: GitHub Action for SwiftLint with --strict
