@@ -10,16 +10,15 @@ on:
 jobs:
   build-macos:
     timeout-minutes: 60
-    runs-on: [self-hosted, macos-12]
+    runs-on: [macos-12]
 
     steps:
-    - name: Wipe gitconfig
+    - name: Homebrew Mac
+      if: ${{ runner.os == 'Macos' }}
       run: |
-        echo "" > ~/.gitconfig
         echo "/opt/homebrew/bin:/usr/local/bin" >> $GITHUB_PATH
+        brew install jemalloc
     - uses: actions/checkout@v3
-    - name: Git URL token override
-      run: git config --global url."https://ordo-ci:${{ secrets.CI_MACHINE_PAT }}@github.com".insteadOf "https://github.com"
     - name: Swift version
       run: swift --version
     - name: Build
@@ -27,5 +26,3 @@ jobs:
     - name: Run tests
       run: |
         [ -d Tests ] && swift test --parallel
-    - name: Wipe gitconfig
-      run: echo "" > ~/.gitconfig
