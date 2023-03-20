@@ -1,8 +1,8 @@
 /// Thread safe access to simple variable protected by lock
 @propertyWrapper
 public final class Protected<T> {
-    var value: T
-    var lock = ConcurrencyHelpers.Lock()
+    private var value: T
+    private var lock = ConcurrencyHelpers.Lock()
 
     public init(wrappedValue: T) {
         value = wrappedValue
