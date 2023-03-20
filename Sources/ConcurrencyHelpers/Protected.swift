@@ -2,11 +2,10 @@
 @propertyWrapper
 public final class Protected<T> {
     var value: T
-    var lock: ConcurrencyHelpers.Lock
+    var lock = ConcurrencyHelpers.Lock()
 
     public init(wrappedValue: T) {
         value = wrappedValue
-        lock = .init()
     }
 
     public var wrappedValue: T {
@@ -17,7 +16,7 @@ public final class Protected<T> {
     public var projectedValue: Protected<T> { self }
 
     /// Provides thread-safe scoped access to protected value
-    /// - Parameter body: The clouse to be called for scoped access
+    /// - Parameter body: The closure to be called for scoped access
     /// - Returns: The return value of the closure
     public func read<V>(_ body: (T) -> V) -> V {
         lock.withLock {
@@ -26,7 +25,7 @@ public final class Protected<T> {
     }
 
     /// Provides thread-safe scoped mutable access to protected value
-    /// - Parameter body: The clouse to be called for scoped access
+    /// - Parameter body: The closure to be called for scoped access
     /// - Returns: The return value of the closure
     public func write<V>(_ body: (inout T) -> V) -> V {
         lock.withLock {

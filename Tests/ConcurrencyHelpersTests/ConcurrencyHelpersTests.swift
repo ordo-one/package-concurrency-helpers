@@ -30,8 +30,8 @@ final class ConcurrencyHelpersTests: XCTestCase {
     }
 
     struct Data {
-        @Protected public var valueA: Int = 1
-        @Protected public var valueB: Int? = nil
+        @Protected var valueA: Int = 1
+        @Protected var valueB: Int? = nil
 
         public mutating func setA(_ a: Int) {
             _valueA.write {
@@ -40,7 +40,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
         }
     }
 
-    func testProceted() {
+    func testProtected() {
         let data = Data()
 
         XCTAssertEqual(data.valueA, 1)
