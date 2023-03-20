@@ -15,18 +15,18 @@
 // Adopted from SwiftNIO for boxing values between concurrency domains when needed
 
 /*
-#if swift(>=5.5) && canImport(_Concurrency)
-public typealias NIOSendable = Swift.Sendable
-#else
-public typealias NIOSendable = Any
-#endif
+ #if swift(>=5.5) && canImport(_Concurrency)
+ public typealias NIOSendable = Swift.Sendable
+ #else
+ public typealias NIOSendable = Any
+ #endif
 
-#if swift(>=5.6)
-@preconcurrency public protocol NIOPreconcurrencySendable: Sendable {}
-#else
-public protocol NIOPreconcurrencySendable {}
-#endif
-*/
+ #if swift(>=5.6)
+ @preconcurrency public protocol NIOPreconcurrencySendable: Sendable {}
+ #else
+ public protocol NIOPreconcurrencySendable {}
+ #endif
+ */
 
 /// ``UnsafeTransfer`` can be used to make non-`Sendable` values `Sendable`.
 /// As the name implies, the usage of this is unsafe because it disables the sendable checking of the compiler.
@@ -42,7 +42,7 @@ public struct UnsafeTransfer<Wrapped> {
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
-extension UnsafeTransfer: @unchecked Sendable {}
+    extension UnsafeTransfer: @unchecked Sendable {}
 #endif
 
 extension UnsafeTransfer: Equatable where Wrapped: Equatable {}
@@ -59,6 +59,7 @@ public final class UnsafeMutableTransferBox<Wrapped> {
         self.wrappedValue = wrappedValue
     }
 }
+
 #if swift(>=5.5) && canImport(_Concurrency)
-extension UnsafeMutableTransferBox: @unchecked Sendable {}
+    extension UnsafeMutableTransferBox: @unchecked Sendable {}
 #endif

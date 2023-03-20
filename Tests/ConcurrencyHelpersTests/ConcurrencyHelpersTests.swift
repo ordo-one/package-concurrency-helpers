@@ -28,4 +28,38 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         lock.withLockVoid { _ = 4 }
     }
+
+    struct Data {
+        @Protected public var valueA: Int = 1
+        @Protected public var valueB: Int? = nil
+
+        public mutating func setA(_ a: Int) {
+            _valueA.write {
+                $0 = a
+            }
+        }
+    }
+
+    func testProceted() {
+        let data = Data()
+
+        XCTAssertEqual(data.valueA, 1)
+        XCTAssertEqual(data.valueB, nil)
+
+        data.valueA = 2
+        data.valueB = 3
+
+        XCTAssertEqual(data.valueA, 2)
+        XCTAssertEqual(data.valueB, 3)
+
+        let valueAis2 = data.$valueA.read { value in
+            value == 2
+        }
+        XCTAssertEqual(valueAis2, true)
+
+        data.$valueB.write {
+            $0 = nil
+        }
+        XCTAssertEqual(data.valueB, nil)
+    }
 }
