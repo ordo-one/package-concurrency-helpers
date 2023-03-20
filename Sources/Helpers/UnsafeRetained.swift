@@ -8,7 +8,6 @@
 
 /// Protocol defines a correct way to release an object
 public protocol Releasable {
-    
     /// The function is called when and only when last reference to the object is dropped
     /// Object have be properly released, owned memory deallocated etc
     func release()
