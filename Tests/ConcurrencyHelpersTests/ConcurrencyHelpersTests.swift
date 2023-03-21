@@ -9,24 +9,26 @@
 @testable import ConcurrencyHelpers
 import XCTest
 
+private final class Counter<Mutex: Lockable>: @unchecked Sendable {
+    private let lock = Mutex()
+    private var count = 0
+
+    init() {}
+
+    var value: Int {
+        lock.withLock { count }
+    }
+
+    func increment() {
+        lock.withLockVoid {
+            count += 1
+        }
+    }
+}
+
 final class ConcurrencyHelpersTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
-    func testExample() throws {
-        let lock = Lock()
-
-        lock.lock()
-        lock.unlock()
-
-        lock.withLock { _ = 1 }
-
-        lock.withLockVoid { _ = 4 }
+    func testLock() async {
+        await doTestLockable(Lock.self)
     }
 
     struct Data {
@@ -61,5 +63,30 @@ final class ConcurrencyHelpersTests: XCTestCase {
             $0 = nil
         }
         XCTAssertEqual(data.valueB, nil)
+    }
+
+    func testSpinlock() async {
+        await doTestLockable(Spinlock.self)
+    }
+
+    private func doTestLockable<Mutex: Lockable>(_: Mutex.Type) async {
+        let taskCount = 10
+        let iterationCount = 10_000
+
+        let counter = Counter<Mutex>()
+
+        await withTaskGroup(of: Void.self, returning: Void.self) { group in
+            for _ in 0 ..< taskCount {
+                group.addTask {
+                    for _ in 0 ..< iterationCount {
+                        counter.increment()
+                    }
+                }
+            }
+
+            await group.waitForAll()
+        }
+
+        XCTAssertEqual(counter.value, taskCount * iterationCount)
     }
 }
