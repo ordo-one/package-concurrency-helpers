@@ -53,6 +53,8 @@ public final class Spinlock {
     }
 }
 
+extension Spinlock: Lockable {}
+
 #if compiler(>=5.5) && canImport(_Concurrency)
     extension Spinlock: @unchecked Sendable {}
 #endif
