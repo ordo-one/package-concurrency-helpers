@@ -27,14 +27,6 @@ private final class Counter<Mutex: Lockable>: @unchecked Sendable {
 }
 
 final class ConcurrencyHelpersTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testLock() async {
         await doTestLockable(Lock.self)
     }
