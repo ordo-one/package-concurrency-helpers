@@ -20,12 +20,18 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-atomics", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/ordo-one/package-latency-tools", .upToNextMajor(from: "1.0.0")),
     ],
     targets: [
         .target(
+            name: "_PauseShims"
+        ),
+        .target(
             name: "ConcurrencyHelpers",
             dependencies: [
+                "_PauseShims",
+                .product(name: "Atomics", package: "swift-atomics"),
             ]
         ),
         .target(

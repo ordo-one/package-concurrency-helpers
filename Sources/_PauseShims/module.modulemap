@@ -1,0 +1,3 @@
+module _PauseShims {
+  header "_PauseShims.h"
+}

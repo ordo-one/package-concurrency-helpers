@@ -9,6 +9,29 @@
 @testable import ConcurrencyHelpers
 import XCTest
 
+private final class Counter: @unchecked Sendable {
+    private let lock = Spinlock()
+    private var count = 0
+
+    init() {}
+
+    var value: Int {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        return count
+    }
+
+    func increment() {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
+        count += 1
+    }
+}
+
 final class ConcurrencyHelpersTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -61,5 +84,26 @@ final class ConcurrencyHelpersTests: XCTestCase {
             $0 = nil
         }
         XCTAssertEqual(data.valueB, nil)
+    }
+
+    func testSpinlock() async {
+        let taskCount = 10
+        let iterationCount = 10_000
+
+        let counter = Counter()
+
+        await withTaskGroup(of: Void.self, returning: Void.self) { group in
+            for _ in 0 ..< taskCount {
+                group.addTask {
+                    for _ in 0 ..< iterationCount {
+                        counter.increment()
+                    }
+                }
+            }
+
+            await group.waitForAll()
+        }
+
+        XCTAssertEqual(counter.value, taskCount * iterationCount)
     }
 }
