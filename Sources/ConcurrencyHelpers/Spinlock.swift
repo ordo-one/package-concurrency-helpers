@@ -16,17 +16,15 @@ public final class Spinlock {
     private static let locked: State = true
     private static let unlocked: State = false
 
-    private let stateStorage = UnsafeMutablePointer<State.AtomicRepresentation>.allocate(capacity: 1)
     private var state: UnsafeAtomic<State>
 
     /// Create a new spin-lock.
     public init() {
-        stateStorage.initialize(to: State.AtomicRepresentation(Self.unlocked))
-        state = .init(at: stateStorage)
+        state = .create(Self.unlocked)
     }
 
     deinit {
-        stateStorage.deallocate()
+        state.destroy()
     }
 
     /// Acquire the lock.
