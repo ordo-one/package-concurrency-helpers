@@ -63,6 +63,11 @@ final class ConcurrencyHelpersTests: XCTestCase {
             $0 = nil
         }
         XCTAssertEqual(data.valueB, nil)
+
+        struct MyError: Error {}
+
+        XCTAssertThrowsError(try data.$valueA.read { _ in throw MyError() })
+        XCTAssertThrowsError(try data.$valueB.write { _ in throw MyError() })
     }
 
     func testSpinlock() async {

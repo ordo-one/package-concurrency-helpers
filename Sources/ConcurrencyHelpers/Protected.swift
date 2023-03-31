@@ -18,18 +18,18 @@ public final class Protected<T> {
     /// Provides thread-safe scoped access to protected value
     /// - Parameter body: The closure to be called for scoped access
     /// - Returns: The return value of the closure
-    public func read<V>(_ body: (T) -> V) -> V {
-        lock.withLock {
-            body(value)
+    public func read<V>(_ body: (T) throws -> V) rethrows -> V {
+        try lock.withLock {
+            try body(value)
         }
     }
 
     /// Provides thread-safe scoped mutable access to protected value
     /// - Parameter body: The closure to be called for scoped access
     /// - Returns: The return value of the closure
-    public func write<V>(_ body: (inout T) -> V) -> V {
-        lock.withLock {
-            body(&value)
+    public func write<V>(_ body: (inout T) throws -> V) rethrows -> V {
+        try lock.withLock {
+            try body(&value)
         }
     }
 }
