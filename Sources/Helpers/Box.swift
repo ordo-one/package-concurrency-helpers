@@ -1,6 +1,8 @@
-// Generic box to allow sharing of values.
-// See https://www.hackingwithswift.com/articles/92/how-to-share-structs-using-boxing
-
+/**
+ * Generic box to allow sharing of objects of value-types (structs, enums, etc)
+ *
+ * See https://www.hackingwithswift.com/articles/92/how-to-share-structs-using-boxing
+ */
 public final class Box<T> {
     public var value: T
 
