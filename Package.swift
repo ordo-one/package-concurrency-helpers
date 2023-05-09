@@ -31,6 +31,7 @@ let package = Package(
             name: "ConcurrencyHelpers",
             dependencies: [
                 "_PauseShims",
+                "Helpers",
                 .product(name: "Atomics", package: "swift-atomics"),
             ]
         ),

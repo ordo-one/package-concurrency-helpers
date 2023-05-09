@@ -94,4 +94,31 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         XCTAssertEqual(counter.value, taskCount * iterationCount)
     }
+
+    private func someAsyncMethod(argument: Int) async -> Int {
+        try? await Task.sleep(nanoseconds: 10_000)
+        return argument * 2
+    }
+
+    func testRunSync() {
+        let result = runSync { await self.someAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+    }
+
+    struct InvalidArgumentError: Error {}
+
+    private func someThrowingAsyncMethod(argument: Int?) async throws -> Int {
+        try? await Task.sleep(nanoseconds: 10_000)
+        guard let argument else {
+            throw InvalidArgumentError()
+        }
+        return argument * 2
+    }
+
+    func testRunSyncThrowable() {
+        let result = try? runSync { try await self.someThrowingAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+
+        XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })
+    }
 }
