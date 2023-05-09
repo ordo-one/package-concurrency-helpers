@@ -1,6 +1,7 @@
 import Helpers
 import XCTest
 
+// swiftlint:disable identifier_name
 final class BoxTests: XCTestCase {
     func testBox() {
         let a = Box<Int>(10)
@@ -32,6 +33,7 @@ final class BoxTests: XCTestCase {
         let b = Box<Int>(13)
 
         XCTAssertTrue(a < b)
+        // swiftlint:disable:next identical_operands
         XCTAssertTrue(a <= a)
         XCTAssertTrue(a <= b)
         XCTAssertFalse(a > b)
@@ -48,3 +50,4 @@ final class BoxTests: XCTestCase {
         XCTAssertEqual(String(reflecting: a), "Box(10)")
     }
 }
+// swiftlint:enable identifier_name
