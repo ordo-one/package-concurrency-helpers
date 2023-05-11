@@ -34,7 +34,7 @@ public struct TimeIntervalCounter<Time: Clock> {
         counter = 0
         nextTimeStamp = clock.now.advanced(by: timeInterval)
     }
-    
+
     /// Increments counter
     /// returns `true`if timeinterval has been reached with provided time
     public mutating func inc(eventTime: Time.Instant) -> Bool {
@@ -42,12 +42,12 @@ public struct TimeIntervalCounter<Time: Clock> {
         assert(nextTimeStamp.advanced(by: Time.Duration.zero - timeInterval) < eventTime, "Event time was before time interval")
         return eventTime > nextTimeStamp
     }
-    
+
     /// Increments counter
     /// returns `true`if timeinterval has been reached
     /// uses Time.now as a time point
     public mutating func inc() -> Bool {
-        return inc(eventTime: clock.now)
+        inc(eventTime: clock.now)
     }
 
     /// Executes passed closure once the checkpoint time interval based on provided event time
