@@ -6,6 +6,12 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
+/// This class  tracks counter during the specified interval the checkpoint was called
+///
+/// - Parameter clock: Clock type that is used for time tracking
+/// - Parameter timeInterval: Execute checkpoint  every `timeInterval`
+/// - Parameter initialCount: Sets initial count, `0` by default
+
 public struct TimeIntervalCounter<Time: Clock> {
     private let clock: Time
     private let timeInterval: Time.Duration
