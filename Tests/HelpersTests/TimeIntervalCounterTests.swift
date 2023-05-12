@@ -39,7 +39,7 @@ final class TimeIntervalCounterTests: XCTestCase {
         XCTAssert(checkPointExecuted, "Checkpoint was not executed")
         XCTAssert(counter.currentCount == 0, "Counter was not reset")
     }
-    
+
     private func counterTestWithInc(forIterations iterations: UInt64, interval: Duration) {
         var counter = TimeIntervalCounter(clock: ContinuousClock(), timeInterval: interval)
 
@@ -47,7 +47,6 @@ final class TimeIntervalCounterTests: XCTestCase {
             let res = counter.incremenet()
             XCTAssert(!res, "Checkpoint was unexpectedly reached")
         }
-        
 
         Thread.sleep(forTimeInterval: TimeInterval(interval.components.seconds + 1))
 
@@ -57,7 +56,7 @@ final class TimeIntervalCounterTests: XCTestCase {
         counter.reset()
         XCTAssert(counter.currentCount == 0, "Counter was not reset")
     }
-    
+
     private func counterTestWithTimeProvided(forIterations iterations: UInt64, interval: Duration) {
         let clock = ContinuousClock()
         var counter = TimeIntervalCounter(clock: ContinuousClock(), timeInterval: interval)
@@ -65,26 +64,26 @@ final class TimeIntervalCounterTests: XCTestCase {
         var checkPointExecuted = false
 
         for idx in 0 ..< iterations - 1 {
-            counter.checkpoint(eventTime: startTs + Duration.nanoseconds(idx), { _ in
+            counter.checkpoint(eventTime: startTs + Duration.nanoseconds(idx)) { _ in
                 checkPointExecuted = true
-            })
+            }
         }
         XCTAssert(!checkPointExecuted, "Checkpoint was unexpectedly executed")
 
-        counter.checkpoint(eventTime: startTs + interval, { count in
+        counter.checkpoint(eventTime: startTs + interval) { count in
             checkPointExecuted = true
 
             XCTAssert(count == iterations, "Count is not equal to iterations")
-        })
+        }
         XCTAssert(checkPointExecuted, "Checkpoint was not executed")
         XCTAssert(counter.currentCount == 0, "Counter was not reset")
     }
-    
+
     private func counterTestWithTimeProvidedInc(forIterations iterations: UInt64, interval: Duration) {
         let clock = ContinuousClock()
         var counter = TimeIntervalCounter(clock: clock, timeInterval: interval)
         let startTs = clock.now
-        
+
         for idx in 0 ..< iterations - 1 {
             let res = counter.incremenet(eventTime: startTs + Duration.nanoseconds(idx))
             XCTAssert(!res, "Checkpoint was unexpectedly reached")
@@ -106,7 +105,7 @@ final class TimeIntervalCounterTests: XCTestCase {
         counterTest(forIterations: 200_000, interval: Duration.seconds(2))
         counterTestWithInc(forIterations: 200_000, interval: Duration.seconds(2))
     }
-    
+
     func testCounter10Iters1SecondTimeProvided() {
         counterTestWithTimeProvided(forIterations: 10, interval: Duration.seconds(1))
         counterTestWithTimeProvidedInc(forIterations: 10, interval: Duration.seconds(1))
