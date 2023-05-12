@@ -44,14 +44,14 @@ final class TimeIntervalCounterTests: XCTestCase {
         var counter = TimeIntervalCounter(clock: ContinuousClock(), timeInterval: interval)
 
         for _ in 0 ..< iterations - 1 {
-            let res = counter.inc()
+            let res = counter.incremenet()
             XCTAssert(!res, "Checkpoint was unexpectedly reached")
         }
         
 
         Thread.sleep(forTimeInterval: TimeInterval(interval.components.seconds + 1))
 
-        let result = counter.inc()
+        let result = counter.incremenet()
         XCTAssert(result, "Checkpoint was not reached")
         XCTAssert(counter.currentCount == iterations, "Count is not equal to iterations")
         counter.reset()
@@ -86,11 +86,11 @@ final class TimeIntervalCounterTests: XCTestCase {
         let startTs = clock.now
         
         for idx in 0 ..< iterations - 1 {
-            let res = counter.inc(eventTime: startTs + Duration.nanoseconds(idx))
+            let res = counter.incremenet(eventTime: startTs + Duration.nanoseconds(idx))
             XCTAssert(!res, "Checkpoint was unexpectedly reached")
         }
 
-        let result = counter.inc(eventTime: startTs + interval)
+        let result = counter.incremenet(eventTime: startTs + interval)
         XCTAssert(result, "Checkpoint was not reached")
         XCTAssert(counter.currentCount == iterations, "Count is not equal to iterations")
         counter.reset()
