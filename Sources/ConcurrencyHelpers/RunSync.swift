@@ -5,18 +5,18 @@ import Helpers
  * Runs async closure and waits for its result in non-async code.
  */
 public func runSync<T>(_ closure: @escaping () async -> T) -> T {
-    let result = Box<T?>(nil)
+    let result = UnsafeMutableTransferBox<T?>(nil)
 
     let semaphore = DispatchSemaphore(value: 0)
 
     Task {
-        result.value = await closure()
+        result.wrappedValue = await closure()
         semaphore.signal()
     }
 
     semaphore.wait()
 
-    return result.value!
+    return result.wrappedValue!
 }
 
 /**
