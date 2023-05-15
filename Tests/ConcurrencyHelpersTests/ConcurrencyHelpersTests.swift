@@ -6,7 +6,8 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-@testable import ConcurrencyHelpers
+import Atomics
+import ConcurrencyHelpers
 import XCTest
 
 private final class Counter<Mutex: Lockable>: @unchecked Sendable {
@@ -93,5 +94,62 @@ final class ConcurrencyHelpersTests: XCTestCase {
         }
 
         XCTAssertEqual(counter.value, taskCount * iterationCount)
+    }
+
+    func testEvent() async {
+        await withTaskGroup(of: Int.self) { group in
+            let value = ManagedAtomic<Int>(0)
+
+            let ready = Event()
+            XCTAssertFalse(ready.isSignaled)
+
+            for _ in 1 ... 20 {
+                group.addTask {
+                    await ready.wait()
+                    return value.load(ordering: .relaxed)
+                }
+            }
+
+            try? await Task.sleep(nanoseconds: 10_000_000) // let all tasks to run
+
+            value.store(10, ordering: .relaxed)
+            ready.signal()
+
+            XCTAssertTrue(ready.isSignaled)
+
+            let sum = await group.reduce(0, +)
+
+            XCTAssertEqual(sum, 10 * 20)
+        }
+    }
+
+    func testEventReset() async {
+        await withTaskGroup(of: Int.self) { group in
+            let value = ManagedAtomic<Int>(0)
+
+            let ready = Event(signaled: true)
+            XCTAssertTrue(ready.isSignaled)
+
+            ready.reset()
+            XCTAssertFalse(ready.isSignaled)
+
+            for _ in 1 ... 20 {
+                group.addTask {
+                    await ready.wait()
+                    return value.load(ordering: .relaxed)
+                }
+            }
+
+            try? await Task.sleep(nanoseconds: 10_000_000) // let all tasks to run
+
+            value.store(10, ordering: .relaxed)
+            ready.signal()
+
+            XCTAssertTrue(ready.isSignaled)
+
+            let sum = await group.reduce(0, +)
+
+            XCTAssertEqual(sum, 10 * 20)
+        }
     }
 }
