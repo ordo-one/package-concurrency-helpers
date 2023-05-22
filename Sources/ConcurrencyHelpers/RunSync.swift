@@ -1,5 +1,4 @@
 import Dispatch
-import Helpers
 
 /**
  * Runs async closure and waits for its result in non-async code.
