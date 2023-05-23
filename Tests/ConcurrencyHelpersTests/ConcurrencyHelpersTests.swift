@@ -105,7 +105,12 @@ final class ConcurrencyHelpersTests: XCTestCase {
         XCTAssertEqual(result, 34 * 2)
     }
 
-    struct InvalidArgumentError: Error {}
+    func testRunSyncWithPriority() {
+        let result = runSync(priority: .userInitiated) { await self.someAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+    }
+
+    private struct InvalidArgumentError: Error {}
 
     private func someThrowingAsyncMethod(argument: Int?) async throws -> Int {
         try? await Task.sleep(nanoseconds: 10_000)
@@ -117,6 +122,13 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
     func testRunSyncThrowable() {
         let result = try? runSync { try await self.someThrowingAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+
+        XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })
+    }
+
+    func testRunSyncThrowableWithPriority() {
+        let result = try? runSync(priority: .userInitiated) { try await self.someThrowingAsyncMethod(argument: 34) }
         XCTAssertEqual(result, 34 * 2)
 
         XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })

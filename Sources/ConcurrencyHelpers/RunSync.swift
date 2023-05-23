@@ -7,14 +7,21 @@ import Dispatch
  * "forward progress" Swift concurrency runtime contract.
  *
  * See https://developer.apple.com/videos/play/wwdc2021/10254/?time=1582
+ *
+ * - Parameters:
+ *   - priority: The priority of the task that will run the operation.
+ *               Pass nil to use the priority from `Task.currentPriority`.
+ *   - operation: The operation to perform.
+ *
+ * - Returns: The value returned from the `operation`.
  */
-public func runSync<T>(_ closure: @escaping () async -> T) -> T {
+public func runSync<T>(priority: TaskPriority? = nil, _ operation: @escaping () async -> T) -> T {
     let result = UnsafeMutableTransferBox<T?>(nil)
 
     let semaphore = DispatchSemaphore(value: 0)
 
-    Task {
-        result.wrappedValue = await closure()
+    Task(priority: priority) {
+        result.wrappedValue = await operation()
         semaphore.signal()
     }
 
@@ -31,15 +38,24 @@ public func runSync<T>(_ closure: @escaping () async -> T) -> T {
  * "forward progress" Swift concurrency runtime contract.
  *
  * See https://developer.apple.com/videos/play/wwdc2021/10254/?time=1582
+ *
+ * - Parameters:
+ *   - priority: The priority of the task that will run the operation.
+ *               Pass nil to use the priority from `Task.currentPriority`.
+ *   - operation: The operation to perform.
+ *
+ * - Returns: The value returned from the `operation`.
+ *
+ * - Throws: The error thrown by the `operation`.
  */
-public func runSync<T>(_ closure: @escaping () async throws -> T) throws -> T{
+public func runSync<T>(priority: TaskPriority? = nil, _ operation: @escaping () async throws -> T) throws -> T {
     func nonthowing() async -> Result<T, Error> {
         do {
-            return .success(try await closure())
+            return .success(try await operation())
         } catch {
             return .failure(error)
         }
     }
 
-    return try runSync(nonthowing).get()
+    return try runSync(priority: priority, nonthowing).get()
 }
