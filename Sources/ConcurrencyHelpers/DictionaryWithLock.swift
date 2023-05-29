@@ -6,6 +6,7 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
+@available(*, deprecated, message: "DictionaryWithLock is unsafe for concurrent usage, please do not use it.")
 public struct DictionaryWithLock<K: Hashable, V> {
     var lock: ConcurrencyHelpers.Lock = .init()
     var map: [K: V] = [:]
