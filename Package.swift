@@ -7,6 +7,7 @@ let package = Package(
     name: "package-concurrency-helpers",
     platforms: [
         .macOS(.v13),
+        .iOS(.v16),
     ],
     products: [
         .library(
