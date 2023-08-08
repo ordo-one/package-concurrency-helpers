@@ -152,7 +152,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
             }
         }
         XCTAssertNotNil(exception)
-        XCTAssert(exception!.description.contains("BadInstruction"))
+        XCTAssert(exception?.description.contains("BadInstruction") ?? false)
     }
 #endif
 }
