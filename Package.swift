@@ -4,9 +4,10 @@
 import class Foundation.ProcessInfo
 import PackageDescription
 
-let externalDependencies: [String: Range<Version>] = [
+var externalDependencies: [String: Range<Version>] = [
     "https://github.com/apple/swift-docc-plugin": .upToNextMajor(from: "1.0.0"),
-    "https://github.com/apple/swift-atomics": .upToNextMajor(from: "1.0.0")
+    "https://github.com/apple/swift-atomics": .upToNextMajor(from: "1.0.0"),
+    "https://github.com/mattgallagher/CwlPreconditionTesting": .upToNextMajor(from: "2.0.0")
 ]
 
 let internalDependencies: [String: Range<Version>] = [
@@ -70,7 +71,13 @@ let package = Package(
         ),
         .testTarget(
             name: "ConcurrencyHelpersTests",
-            dependencies: ["ConcurrencyHelpers"]
+            dependencies: [
+                .product(
+                    name: "CwlPreconditionTesting",
+                    package: "CwlPreconditionTesting",
+                    condition: .when(platforms: [.macOS])),
+                "ConcurrencyHelpers",
+            ]
         ),
         .testTarget(
             name: "HelpersTests",

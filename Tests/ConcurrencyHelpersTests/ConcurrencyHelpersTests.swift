@@ -8,6 +8,9 @@
 
 @testable import ConcurrencyHelpers
 import XCTest
+#if os(OSX) && DEBUG
+import CwlPreconditionTesting
+#endif
 
 private final class Counter<Mutex: Lockable>: @unchecked Sendable {
     private let lock = Mutex()
@@ -133,4 +136,23 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })
     }
+
+#if os(OSX) && DEBUG
+    func testForBlockingCallProvidedQueueUsed() async {
+        let queue = DispatchQueue(label: "com.test.queue")
+
+        var exception: BadInstructionException?
+        await forBlockingFunc(queue: queue) {
+            // NB! BadInstruction will occur due
+            // to sync dispatch to the same queue
+            exception = catchBadInstruction {
+                queue.sync {
+                    print("Never")
+                }
+            }
+        }
+        XCTAssertNotNil(exception)
+        XCTAssert(exception!.description.contains("BadInstruction"))
+    }
+#endif
 }
