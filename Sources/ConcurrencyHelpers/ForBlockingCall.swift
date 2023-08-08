@@ -27,10 +27,10 @@ import Dispatch
 /// - Parameter body: Function to be called in the `queue`
 ///
 /// - Returns: The function returns a value returned by `body` function
-public func forBlockingFunc<T>(queue _: DispatchQueue = .global(),
+public func forBlockingFunc<T>(queue: DispatchQueue = .global(),
                                body: @escaping () -> T) async -> T {
     await withCheckedContinuation { continuation in
-        DispatchQueue.global().async {
+        queue.async {
             continuation.resume(returning: body())
         }
     }
