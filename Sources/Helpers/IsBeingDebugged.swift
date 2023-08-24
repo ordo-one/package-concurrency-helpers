@@ -14,6 +14,7 @@ import Glibc
 #error("Unsupported Platform")
 #endif
 
+/// Returns true if the process is currently being traced by a debugger.
 public var isBeingDebugged: Bool {
 #if os(macOS) || os(iOS)
      var processInfo = kinfo_proc()
