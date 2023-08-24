@@ -155,4 +155,51 @@ final class ConcurrencyHelpersTests: XCTestCase {
         XCTAssert(exception?.description.contains("BadInstruction") ?? false)
     }
 #endif
+
+    func testTaskCancellationInYieldWithBackPressure() async throws {
+        typealias Stream = AsyncStream<Int>
+
+        let (stream, continuation) = {
+            var continuation: Stream.Continuation?
+            let stream = Stream(bufferingPolicy: .bufferingOldest(1)) { continuation = $0 }
+            return (stream, continuation!)
+        }()
+
+        _ = stream // silent "never used" warning
+
+        // make stream buffer "full"
+        XCTAssertEqual(continuation.yield(5), .enqueued(remaining: 0))
+
+        // start a task that tries to add another element to the stream
+        let producerTask = Task {
+            // will loop here
+            await yieldWithBackPressure(message: 10, to: continuation)
+        }
+
+        producerTask.cancel()
+
+        // wait for task to finish
+        _ = await producerTask.value
+    }
+}
+
+extension AsyncStream.Continuation.YieldResult: Equatable where Element: Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        switch lhs {
+        case .enqueued(let lhsRemaining):
+            if case .enqueued(let rhsRemaining) = rhs {
+                return lhsRemaining == rhsRemaining
+            }
+            return false
+        case .dropped(let lhsElement):
+            if case .dropped(let rhsElement) = rhs {
+                return lhsElement == rhsElement
+            }
+            return false
+        case .terminated:
+            return rhs == .terminated
+        default:
+            fatalError("unknown yield result: \(lhs)")
+        }
+    }
 }

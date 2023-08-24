@@ -28,6 +28,9 @@ public func yieldWithBackPressure<Message>(message: Message,
             return true
         case .dropped:
             // Here we can know what message has beed dropped
+            if Task.isCancelled {
+                return false
+            }
             await Task.yield()
             continue
         @unknown default:
