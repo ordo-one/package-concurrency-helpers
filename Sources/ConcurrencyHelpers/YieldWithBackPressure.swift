@@ -10,6 +10,7 @@
 /// with back pressure logic.
 ///
 /// If `continuation` returns `.dropped`, the method yields the Task and try again.
+/// If the task is cancelled it stops trying and return `false`.
 ///
 /// - Parameter message: The value to yield to the continuation.
 /// - Parameter continuation: The continuation to yield message to.
