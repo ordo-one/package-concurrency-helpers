@@ -6,7 +6,7 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-@testable import ConcurrencyHelpers
+@testable import PackageConcurrencyHelpers
 import XCTest
 #if os(OSX) && DEBUG
 import CwlPreconditionTesting

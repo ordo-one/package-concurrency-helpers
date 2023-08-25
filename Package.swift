@@ -43,8 +43,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "ConcurrencyHelpers",
-            targets: ["ConcurrencyHelpers"]
+            name: "PackageConcurrencyHelpers",
+            targets: ["PackageConcurrencyHelpers"]
         ),
         .library(
             name: "Helpers",
@@ -57,11 +57,12 @@ let package = Package(
             name: "_PauseShims"
         ),
         .target(
-            name: "ConcurrencyHelpers",
+            name: "PackageConcurrencyHelpers",
             dependencies: [
                 "_PauseShims",
                 .product(name: "Atomics", package: "swift-atomics"),
-            ]
+            ],
+            path: "Sources/ConcurrencyHelpers"
         ),
         .target(
             name: "Helpers",
@@ -76,12 +77,12 @@ let package = Package(
                     name: "CwlPreconditionTesting",
                     package: "CwlPreconditionTesting",
                     condition: .when(platforms: [.macOS])),
-                "ConcurrencyHelpers",
+                "PackageConcurrencyHelpers",
             ]
         ),
         .testTarget(
             name: "HelpersTests",
-            dependencies: ["Helpers", "ConcurrencyHelpers"]
+            dependencies: ["Helpers", "PackageConcurrencyHelpers"]
         ),
     ]
 )

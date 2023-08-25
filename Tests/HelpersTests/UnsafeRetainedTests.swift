@@ -6,7 +6,7 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-import ConcurrencyHelpers
+import PackageConcurrencyHelpers
 @testable import Helpers
 import XCTest
 

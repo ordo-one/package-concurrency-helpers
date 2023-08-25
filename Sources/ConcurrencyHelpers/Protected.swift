@@ -2,7 +2,7 @@
 @propertyWrapper
 public final class Protected<T> {
     private var value: T
-    private var lock = ConcurrencyHelpers.Lock()
+    private var lock = PackageConcurrencyHelpers.Lock()
 
     public init(wrappedValue: T) {
         value = wrappedValue
