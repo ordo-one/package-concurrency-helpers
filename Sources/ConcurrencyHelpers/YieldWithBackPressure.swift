@@ -28,7 +28,7 @@ public func yieldWithBackPressure<Message>(message: Message,
             // Here we can know how many slots remains in the stream
             return true
         case .dropped:
-            // Here we can know what message has beed dropped
+            // Here we can know that a message has been dropped
             if Task.isCancelled {
                 return false
             }
