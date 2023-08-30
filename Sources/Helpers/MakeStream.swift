@@ -6,28 +6,23 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-/// `makeStream` is part of Swift 5.9
-/// https://github.com/apple/swift-evolution/blob/main/proposals/0388-async-stream-factory.md
-public func makeStream<T>(of _: T.Type) -> (AsyncStream<T>, AsyncStream<T>.Continuation) {
-    var resultContinuation: AsyncStream<T>.Continuation?
-    let asyncStream = AsyncStream<T> { continuation in
-        resultContinuation = continuation
-    }
+#if swift(<5.9)
+public extension AsyncStream {
+    /// `makeStream` is part of Swift 5.9
+    /// https://github.com/apple/swift-evolution/blob/main/proposals/0388-async-stream-factory.md
+    static func makeStream(
+        of elementType: Element.Type = Element.self,
+        bufferingPolicy limit: Continuation.BufferingPolicy = .unbounded
+    ) -> (stream: AsyncStream<Element>, continuation: AsyncStream<Element>.Continuation) {
+        var resultContinuation: AsyncStream<Element>.Continuation?
+        let stream = AsyncStream<Element>(bufferingPolicy: limit) { continuation in
+            resultContinuation = continuation
+        }
 
-    guard let resultContinuation else {
-        fatalError("makeStream internal error, couldn't extract resultContinuation")
+        guard let resultContinuation else {
+            fatalError("makeStream internal error, couldn't extract resultContinuation")
+        }
+        return (stream: stream, continuation: resultContinuation)
     }
-    return (asyncStream, resultContinuation)
 }
-
-public func makeSingleStream<T>(of _: T.Type) -> (AsyncStream<T>, AsyncStream<T>.Continuation) {
-    var resultContinuation: AsyncStream<T>.Continuation?
-    let asyncStream = AsyncStream<T>(bufferingPolicy: .bufferingNewest(1)) { continuation in
-        resultContinuation = continuation
-    }
-
-    guard let resultContinuation else {
-        fatalError("makeStream internal error, couldn't extract resultContinuation")
-    }
-    return (asyncStream, resultContinuation)
-}
+#endif
