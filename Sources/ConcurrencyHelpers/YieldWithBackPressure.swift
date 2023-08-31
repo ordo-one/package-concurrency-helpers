@@ -10,6 +10,7 @@
 /// with back pressure logic.
 ///
 /// If `continuation` returns `.dropped`, the method yields the Task and try again.
+/// If the task is cancelled it stops trying and return `false`.
 ///
 /// - Parameter message: The value to yield to the continuation.
 /// - Parameter continuation: The continuation to yield message to.
@@ -27,7 +28,10 @@ public func yieldWithBackPressure<Message>(message: Message,
             // Here we can know how many slots remains in the stream
             return true
         case .dropped:
-            // Here we can know what message has beed dropped
+            // Here we can know that a message has been dropped
+            if Task.isCancelled {
+                return false
+            }
             await Task.yield()
             continue
         @unknown default:
