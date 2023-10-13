@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.8
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import class Foundation.ProcessInfo
@@ -63,8 +63,7 @@ let package = Package(
                 .product(name: "Atomics", package: "swift-atomics"),
             ],
             path: "Sources/ConcurrencyHelpers",
-            //swiftSettings: [.enableUpcomingFeature("StrictConcurrency=complete")]
-            swiftSettings: [.unsafeFlags(["-Xfrontend", "-strict-concurrency=complete", "-Xfrontend", "-enable-actor-data-race-checks"])]
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
         ),
         .target(
             name: "Helpers",
