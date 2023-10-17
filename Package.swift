@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.8
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import class Foundation.ProcessInfo
@@ -62,7 +62,8 @@ let package = Package(
                 "_PauseShims",
                 .product(name: "Atomics", package: "swift-atomics"),
             ],
-            path: "Sources/ConcurrencyHelpers"
+            path: "Sources/ConcurrencyHelpers",
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
         ),
         .target(
             name: "Helpers",

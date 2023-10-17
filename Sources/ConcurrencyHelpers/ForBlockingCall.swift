@@ -28,7 +28,7 @@ import Dispatch
 ///
 /// - Returns: The function returns a value returned by `body` function
 public func forBlockingFunc<T>(queue: DispatchQueue = .global(),
-                               body: @escaping () -> T) async -> T {
+                               body: @escaping @Sendable () -> T) async -> T {
     await withCheckedContinuation { continuation in
         queue.async {
             continuation.resume(returning: body())
