@@ -1,4 +1,4 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import class Foundation.ProcessInfo
@@ -38,8 +38,7 @@ func makeDependencies() -> [Package.Dependency] {
 let package = Package(
     name: "package-concurrency-helpers",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v16),
+        .macOS(.v14),
     ],
     products: [
         .library(
