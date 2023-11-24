@@ -11,7 +11,7 @@ let externalDependencies: [String: Range<Version>] = [
 ]
 
 let internalDependencies: [String: Range<Version>] = [
-    "package-latency-tools": .upToNextMajor(from: "1.0.0")
+    "package-latency-tools": .upToNextMajor(from: "2.0.0-alpha.1")
 ]
 
 func makeDependencies() -> [Package.Dependency] {
