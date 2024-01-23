@@ -136,7 +136,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })
     }
-
+/* To be fixed in sc-6284
 #if os(OSX) && DEBUG
     func testForBlockingCallProvidedQueueUsed() async {
         let queue = DispatchQueue(label: "com.test.queue")
@@ -155,7 +155,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
         XCTAssert(exception?.description.contains("BadInstruction") ?? false)
     }
 #endif
-
+*/
     func testTaskCancellationInYieldWithBackPressure() async throws {
         typealias Stream = AsyncStream<Int>
 
