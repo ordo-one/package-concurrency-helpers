@@ -35,7 +35,6 @@
 public struct UnsafeTransfer<Wrapped> {
     public var wrappedValue: Wrapped
 
-    @inlinable
     public init(_ wrappedValue: Wrapped) {
         self.wrappedValue = wrappedValue
     }
@@ -54,7 +53,6 @@ extension UnsafeTransfer: Hashable where Wrapped: Hashable {}
 public final class UnsafeMutableTransferBox<Wrapped> {
     public var wrappedValue: Wrapped
 
-    @inlinable
     public init(_ wrappedValue: Wrapped) {
         self.wrappedValue = wrappedValue
     }
