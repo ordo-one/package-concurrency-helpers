@@ -136,26 +136,34 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         XCTAssertThrowsError(try runSync { try await self.someThrowingAsyncMethod(argument: nil) })
     }
-/* To be fixed in sc-6284
+
 #if os(OSX) && DEBUG
     func testForBlockingCallProvidedQueueUsed() async {
         let queue = DispatchQueue(label: "com.test.queue")
 
-        var exception: BadInstructionException?
+        final class UnsafeWrapper: @unchecked Sendable {
+            @Protected
+            var exception: BadInstructionException?
+        }
+        let wrapper = UnsafeWrapper()
+
         await forBlockingFunc(queue: queue) {
             // NB! BadInstruction will occur due
             // to sync dispatch to the same queue
-            exception = catchBadInstruction {
+            let exception = catchBadInstruction {
                 queue.sync {
                     print("Never")
                 }
             }
+            
+            wrapper.exception = exception
         }
+        let exception = wrapper.exception
         XCTAssertNotNil(exception)
         XCTAssert(exception?.description.contains("BadInstruction") ?? false)
     }
 #endif
-*/
+
     func testTaskCancellationInYieldWithBackPressure() async throws {
         typealias Stream = AsyncStream<Int>
 
