@@ -155,7 +155,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
                     print("Never")
                 }
             }
-            
+
             wrapper.exception = exception
         }
         let exception = wrapper.exception
@@ -188,6 +188,38 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
         // wait for task to finish
         _ = await producerTask.value
+    }
+
+    // Helper function to generate a large array of random integers
+    private func generateRandomArray(size: Int) -> [Int] {
+        return (1...size).map { _ in Int.random(in: 1...1000) }
+    }
+
+    // Test for synchronous concurrentMap
+    func testConcurrentMapSynchronous() async {
+        let largeArray = generateRandomArray(size: 100000)
+        let expectedResults = largeArray.map { $0 * 2 }
+
+        // Assuming that concurrentMap is implemented on the Array type
+        let concurrentResults = await largeArray.concurrentMap { $0 * 2 }
+
+        XCTAssertEqual(concurrentResults, expectedResults, "The synchronous concurrentMap results do not match the expected results.")
+    }
+
+    // Test for asynchronous concurrentMap
+    func testConcurrentMapAsynchronous() async {
+        let largeArray = generateRandomArray(size: 100000)
+        let expectedResults = largeArray.map { $0 * 2 }
+
+        // Using async transform
+        let concurrentResults = await largeArray.concurrentMap { number in
+            do {
+                try await Task.sleep(nanoseconds: UInt64.random(in: 10_000...100_000))  // Simulate some asynchronous work
+            } catch {}
+            return number * 2
+        }
+
+        XCTAssertEqual(concurrentResults, expectedResults, "The asynchronous concurrentMap results do not match the expected results.")
     }
 }
 
