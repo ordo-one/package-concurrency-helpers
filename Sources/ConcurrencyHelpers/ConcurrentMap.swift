@@ -1,5 +1,6 @@
 extension RandomAccessCollection where Self: Sendable, Element: Sendable {
-    func concurrentMap<B: Sendable>(minBatchSize: Int = 4096, _ transform: @Sendable @escaping (Element) async -> B) async -> [B] {
+    @inlinable
+    public func concurrentMap<B: Sendable>(minBatchSize: Int = 4096, _ transform: @Sendable @escaping (Element) async -> B) async -> [B] {
         precondition(minBatchSize >= 1)
         let n = self.count
         let batchCount = (n + minBatchSize - 1) / minBatchSize
@@ -46,7 +47,8 @@ extension RandomAccessCollection where Self: Sendable, Element: Sendable {
 }
 
 extension RandomAccessCollection where Self: Sendable, Element: Sendable {
-    func concurrentMap<B: Sendable>(minBatchSize: Int = 4096, _ transform: @Sendable @escaping (Element) -> B) async -> [B] {
+    @inlinable
+    public func concurrentMap<B: Sendable>(minBatchSize: Int = 4096, _ transform: @Sendable @escaping (Element) -> B) async -> [B] {
         precondition(minBatchSize >= 1)
         let n = self.count
         let batchCount = (n + minBatchSize - 1) / minBatchSize
