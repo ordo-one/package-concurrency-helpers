@@ -14,6 +14,9 @@ let internalDependencies: [String: Range<Version>] = [
     "package-latency-tools": .upToNextMajor(from: "1.0.0")
 ]
 
+#if swift(>=6.0)
+@MainActor
+#endif
 func makeDependencies() -> [Package.Dependency] {
     var dependencies: [Package.Dependency] = []
     dependencies.reserveCapacity(externalDependencies.count + internalDependencies.count)
