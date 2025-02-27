@@ -136,19 +136,6 @@ and then add the dependency to your target, e.g.:
   // 'roundedUp' is 32.
   ```
 
-* Track the rate of an event, and run a closure every N events:
-
-  ```swift
-  let monitor = ProcessingRate(interval: 10)
-
-  while true {
-      monitor.checkpoint {
-          // Runs every 10 calls to `checkpoint`.
-          print("Current rate: \(monitor.ratePerSecond) Hz")
-      }
-  }
-  ```
-
 * Count events, then at designated checkpoints run a closure & reset the count if a set duration has passed since the last reset (or since the counter was created, if never before reset).
 
   ```swift

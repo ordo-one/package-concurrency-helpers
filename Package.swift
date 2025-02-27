@@ -10,9 +10,7 @@ let externalDependencies: [String: Range<Version>] = [
     "https://github.com/mattgallagher/CwlPreconditionTesting": .upToNextMajor(from: "2.0.0")
 ]
 
-let internalDependencies: [String: Range<Version>] = [
-    "package-latency-tools": .upToNextMajor(from: "1.0.0")
-]
+let internalDependencies: [String: Range<Version>] = [:]
 
 #if swift(>=6.0)
 @MainActor
@@ -69,10 +67,7 @@ let package = Package(
             swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
         ),
         .target(
-            name: "Helpers",
-            dependencies: [
-                .product(name: "LatencyTimer", package: "package-latency-tools"),
-            ]
+            name: "Helpers"
         ),
         .testTarget(
             name: "ConcurrencyHelpersTests",
