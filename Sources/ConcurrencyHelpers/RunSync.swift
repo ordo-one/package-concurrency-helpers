@@ -15,17 +15,21 @@ import Dispatch
  *
  * - Returns: The value returned from the `operation`.
  */
-public func runSync<T: Sendable>(priority: TaskPriority? = nil, _ operation: @escaping @Sendable () async -> T) -> T {
+public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async -> T) -> T {
     let result = UnsafeMutableTransferBox<T?>(nil)
 
-    let semaphore = DispatchSemaphore(value: 0)
+    withoutActuallyEscaping(operation) { escapableOperation in
+        let semaphore = DispatchSemaphore(value: 0)
 
-    Task(priority: priority) {
-        result.wrappedValue = await operation()
-        semaphore.signal()
+        let wrapper = UnsafeSendableWrapper(instance: escapableOperation)
+
+        Task(priority: priority) { [wrapper] in
+            result.wrappedValue = await wrapper.instance()
+            semaphore.signal()
+        }
+
+        semaphore.wait()
     }
-
-    semaphore.wait()
 
     return result.wrappedValue!
 }
@@ -48,7 +52,7 @@ public func runSync<T: Sendable>(priority: TaskPriority? = nil, _ operation: @es
  *
  * - Throws: The error thrown by the `operation`.
  */
-public func runSync<T: Sendable>(priority: TaskPriority? = nil, _ operation: @escaping @Sendable () async throws -> T) throws -> T {
+public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async throws -> T) throws -> T {
     let result = runSync(priority: priority) { () -> Result<T, Error> in
         do {
             return .success(try await operation())
