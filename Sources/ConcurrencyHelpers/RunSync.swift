@@ -21,10 +21,15 @@ public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async -> T
     withoutActuallyEscaping(operation) { escapableOperation in
         let semaphore = DispatchSemaphore(value: 0)
 
-        let wrapper = UnsafeSendableWrapper(instance: escapableOperation)
+        let wrapper = UnsafeMutableTransferBox(Optional(escapableOperation))
 
         Task(priority: priority) { [wrapper] in
-            result.wrappedValue = await wrapper.instance()
+            result.wrappedValue = await wrapper.wrappedValue!()
+
+            // Make sure reference to escapableOperation is released here otherwise
+            // it can outlive withoutActuallEscaping() block.
+            wrapper.wrappedValue = nil
+
             semaphore.signal()
         }
 
