@@ -108,8 +108,14 @@ final class ConcurrencyHelpersTests: XCTestCase {
         XCTAssertEqual(result, 34 * 2)
     }
 
-    @available(macOS 26, iOS 26, *)
-    func testRunSyncInRunSync() {
+    func testRunSyncInRunSync() throws {
+        #if !compiler(>=6.2)
+            throw XCTSkip("Skipping test: compiler version does not support immediate tasks")
+        #endif
+        guard #available(macOS 26, iOS 26, *) else {
+            throw XCTSkip("Skipping test: OS version does not support immediate tasks")
+        }
+
         func runSyncRec(recursion: Int) -> Int {
             if recursion <= 0 {
                 return runSync {
