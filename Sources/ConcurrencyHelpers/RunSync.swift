@@ -23,7 +23,7 @@ public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async -> T
 
         let wrapper = UnsafeMutableTransferBox(Optional(escapableOperation))
 
-        Task(priority: priority) { [wrapper] in
+        let body = { [wrapper] in
             result.wrappedValue = await wrapper.wrappedValue!()
 
             // Make sure reference to escapableOperation is released here otherwise
@@ -32,7 +32,18 @@ public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async -> T
 
             semaphore.signal()
         }
-
+        #if compiler(>=6.2)
+            // preferably to have
+            // if #compiler (>=6.2) && #available(macOS 26, iOS 26, *)
+            // but that is not supported by swift...
+            if #available(macOS 26, iOS 26, *) {
+                Task.immediate(priority: priority, operation: body)
+            } else {
+                Task(priority: priority, operation: body)
+            }
+        #else
+            Task(priority: priority, operation: body)
+        #endif
         semaphore.wait()
     }
 

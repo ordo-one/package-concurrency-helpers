@@ -10,14 +10,6 @@
 import XCTest
 
 final class TimeIntervalCounterTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
     private func counterTest(forIterations iterations: UInt64, interval: Duration) {
         var counter = TimeIntervalCounter(clock: ContinuousClock(), timeInterval: interval)
         var checkPointExecuted = false

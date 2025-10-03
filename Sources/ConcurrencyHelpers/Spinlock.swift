@@ -6,11 +6,11 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-import Atomics
 import _PauseShims
+import Atomics
 
 /// Lock to protect very short critical sections.
-public final class Spinlock {
+public final class Spinlock: @unchecked Sendable {
     private typealias State = Bool
 
     private static let locked: State = true
@@ -52,7 +52,3 @@ public final class Spinlock {
 }
 
 extension Spinlock: Lockable {}
-
-#if compiler(>=5.5) && canImport(_Concurrency)
-    extension Spinlock: @unchecked Sendable {}
-#endif

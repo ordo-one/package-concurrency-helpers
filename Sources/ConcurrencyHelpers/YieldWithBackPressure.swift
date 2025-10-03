@@ -16,8 +16,10 @@
 /// - Parameter continuation: The continuation to yield message to.
 /// - Returns: `true` if the `message` has been succesfully yielded to the stream and `false` in otherwise.
 @discardableResult
-public func yieldWithBackPressure<Message>(message: Message,
-                                           to continuation: AsyncStream<Message>.Continuation) async -> Bool {
+public func yieldWithBackPressure<Message>(
+    message: Message,
+    to continuation: AsyncStream<Message>.Continuation
+) async -> Bool {
     while true {
         let result = continuation.yield(message)
         switch result {

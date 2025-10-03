@@ -34,11 +34,11 @@ final class ConcurrencyHelpersTests: XCTestCase {
         await doTestLockable(Lock.self)
     }
 
-    struct Data {
+    private struct Data {
         @Protected var valueA: Int = 1
-        @Protected var valueB: Int? = nil
+        @Protected var valueB: Int?
 
-        public mutating func setA(_ a: Int) {
+        mutating func setA(_ a: Int) {
             _valueA.write {
                 $0 = a
             }
@@ -77,7 +77,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
         await doTestLockable(Spinlock.self)
     }
 
-    private func doTestLockable<Mutex: Lockable>(_: Mutex.Type) async {
+    private func doTestLockable<Mutex: Lockable & Sendable>(_: Mutex.Type) async {
         let taskCount = 10
         let iterationCount = 10_000
 
@@ -105,6 +105,28 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
     func testRunSync() {
         let result = runSync { await self.someAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+    }
+
+    func testRunSyncInRunSync() throws {
+        #if !compiler(>=6.2)
+            throw XCTSkip("Skipping test: compiler version does not support immediate tasks")
+        #endif
+        guard #available(macOS 26, iOS 26, *) else {
+            throw XCTSkip("Skipping test: OS version does not support immediate tasks")
+        }
+
+        func runSyncRec(recursion: Int) -> Int {
+            if recursion <= 0 {
+                return runSync {
+                    await self.someAsyncMethod(argument: 34)
+                }
+            }
+            return runSync {
+                runSyncRec(recursion: recursion - 1)
+            }
+        }
+        let result = runSyncRec(recursion: 100)
         XCTAssertEqual(result, 34 * 2)
     }
 
@@ -155,7 +177,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
                     print("Never")
                 }
             }
-            
+
             wrapper.exception = exception
         }
         let exception = wrapper.exception
@@ -191,7 +213,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
     }
 }
 
-extension AsyncStream.Continuation.YieldResult: Equatable where Element: Equatable {
+extension AsyncStream.Continuation.YieldResult: @retroactive Equatable where Element: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch lhs {
         case .enqueued(let lhsRemaining):

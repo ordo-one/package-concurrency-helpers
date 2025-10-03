@@ -17,7 +17,7 @@
     #error("Unsupported Platform")
 #endif
 
-public final class Lock {
+public final class Lock: @unchecked Sendable {
     #if os(macOS)
         fileprivate let mutex = UnsafeMutablePointer<os_unfair_lock>.allocate(capacity: 1)
     #else
@@ -76,7 +76,3 @@ public final class Lock {
 }
 
 extension Lock: Lockable {}
-
-#if compiler(>=5.5) && canImport(_Concurrency)
-    extension Lock: Sendable {}
-#endif
