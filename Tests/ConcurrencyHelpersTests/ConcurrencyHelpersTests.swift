@@ -77,7 +77,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
         await doTestLockable(Spinlock.self)
     }
 
-    private func doTestLockable<Mutex: Lockable>(_: Mutex.Type) async {
+    private func doTestLockable<Mutex: Lockable & Sendable>(_: Mutex.Type) async {
         let taskCount = 10
         let iterationCount = 10_000
 
@@ -105,6 +105,22 @@ final class ConcurrencyHelpersTests: XCTestCase {
 
     func testRunSync() {
         let result = runSync { await self.someAsyncMethod(argument: 34) }
+        XCTAssertEqual(result, 34 * 2)
+    }
+
+    @available(macOS 26, iOS 26, *)
+    func testRunSyncInRunSync() {
+        func runSyncRec(recursion: Int) -> Int {
+            if recursion <= 0 {
+                return runSync {
+                    await self.someAsyncMethod(argument: 34)
+                }
+            }
+            return runSync {
+                runSyncRec(recursion: recursion - 1)
+            }
+        }
+        let result = runSyncRec(recursion: 100)
         XCTAssertEqual(result, 34 * 2)
     }
 
@@ -191,7 +207,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
     }
 }
 
-extension AsyncStream.Continuation.YieldResult: Equatable where Element: Equatable {
+extension AsyncStream.Continuation.YieldResult: @retroactive Equatable where Element: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch lhs {
         case .enqueued(let lhsRemaining):

@@ -23,16 +23,42 @@ public func runSync<T>(priority: TaskPriority? = nil, _ operation: () async -> T
 
         let wrapper = UnsafeMutableTransferBox(Optional(escapableOperation))
 
-        Task(priority: priority) { [wrapper] in
-            result.wrappedValue = await wrapper.wrappedValue!()
+        #if compiler(>=6.2)
+            // preferably to have
+            // if #compiler (>=6.2) && #available(macOS 26, iOS 26, *)
+            // but that is not supported by swift...
+            if #available(macOS 26, iOS 26, *) {
+                Task.immediate(priority: priority) { [wrapper] in
+                    result.wrappedValue = await wrapper.wrappedValue!()
 
-            // Make sure reference to escapableOperation is released here otherwise
-            // it can outlive withoutActuallEscaping() block.
-            wrapper.wrappedValue = nil
+                    // Make sure reference to escapableOperation is released here otherwise
+                    // it can outlive withoutActuallEscaping() block.
+                    wrapper.wrappedValue = nil
 
-            semaphore.signal()
-        }
+                    semaphore.signal()
+                }
+            } else {
+                Task(priority: priority) { [wrapper] in
+                    result.wrappedValue = await wrapper.wrappedValue!()
 
+                    // Make sure reference to escapableOperation is released here otherwise
+                    // it can outlive withoutActuallEscaping() block.
+                    wrapper.wrappedValue = nil
+
+                    semaphore.signal()
+                }
+            }
+        #else
+            Task(priority: priority) { [wrapper] in
+                result.wrappedValue = await wrapper.wrappedValue!()
+
+                // Make sure reference to escapableOperation is released here otherwise
+                // it can outlive withoutActuallEscaping() block.
+                wrapper.wrappedValue = nil
+
+                semaphore.signal()
+            }
+        #endif
         semaphore.wait()
     }
 
