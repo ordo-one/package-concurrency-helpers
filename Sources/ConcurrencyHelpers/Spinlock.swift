@@ -6,8 +6,8 @@
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 
-import Atomics
 import _PauseShims
+import Atomics
 
 /// Lock to protect very short critical sections.
 public final class Spinlock: @unchecked Sendable {

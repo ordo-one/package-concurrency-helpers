@@ -34,11 +34,11 @@ final class ConcurrencyHelpersTests: XCTestCase {
         await doTestLockable(Lock.self)
     }
 
-    struct Data {
+    private struct Data {
         @Protected var valueA: Int = 1
-        @Protected var valueB: Int? = nil
+        @Protected var valueB: Int?
 
-        public mutating func setA(_ a: Int) {
+        mutating func setA(_ a: Int) {
             _valueA.write {
                 $0 = a
             }
@@ -171,7 +171,7 @@ final class ConcurrencyHelpersTests: XCTestCase {
                     print("Never")
                 }
             }
-            
+
             wrapper.exception = exception
         }
         let exception = wrapper.exception
